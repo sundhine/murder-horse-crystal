@@ -59,6 +59,17 @@ module Murder::Horse
   end
 end
 
+def tester(i : (Int32 | String))
+  result = case i
+           when Int32
+             "number"
+           end
+  result
+end
+
+puts tester("gekki")
+puts tester(1234)
+
 include Murder::Horse
 require "kemal"
 require "json"
@@ -67,6 +78,10 @@ get "/solution" do |env|
   env.response.content_type = "application/json"
   _, result = find_solutions(Position.new(0, 0))
   {solution: result.map { |p| {x: p.x, y: p.y} }}.to_json
+end
+
+get "/" do |env|
+  env.response.status_code = 404
 end
 
 Kemal.run
