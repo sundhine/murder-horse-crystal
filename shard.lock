@@ -1,5 +1,9 @@
 version: 1.0
 shards:
+  immutable:
+    github: lucaong/immutable
+    version: 0.1.21
+
   kemal:
     github: kemalcr/kemal
     commit: ce9e924d00d07bf9ca7184a41bc81579da0122ec

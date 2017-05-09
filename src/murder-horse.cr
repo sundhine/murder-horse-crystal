@@ -1,4 +1,5 @@
 require "./murder-horse/*"
+require "immutable"
 
 module Murder::Horse
   extend self
@@ -34,41 +35,28 @@ module Murder::Horse
   end
 
   def find_solutions(p)
-    find_solution_rec(p, Set(Position).new, [] of Position)
+    find_solution_rec(p, Immutable::Map(Position, Bool).new, Immutable::Vector(Position).new)
   end
 
   private def find_solution_rec(p, visited, path)
-    is_complete = ->(p : Array(Position)) { p.size == BOARDSIZE*BOARDSIZE }
+    is_complete = ->(p : Immutable::Vector(Position)) { p.size == BOARDSIZE*BOARDSIZE }
 
-    visited.add(p)
-    path.push(p)
+    new_visited = visited.set(p, true)
+    new_path = path.push(p)
 
-    if is_complete.call(path)
-      return {true, path}
+    if is_complete.call(new_path)
+      return {true, new_path}
     end
 
-    p.next_move_optimised.select { |a| !visited.includes?(a) }.each do |a|
-      success, result = find_solution_rec(a, visited, path)
+    p.next_move_optimised.select { |a| !new_visited.fetch(a, false) }.each do |a|
+      success, result = find_solution_rec(a, new_visited, new_path)
       if success
         return {true, result}
       end
     end
-    path.pop
-    visited.delete(p)
     {false, [] of Position}
   end
 end
-
-def tester(i : (Int32 | String))
-  result = case i
-           when Int32
-             "number"
-           end
-  result
-end
-
-puts tester("gekki")
-puts tester(1234)
 
 include Murder::Horse
 require "kemal"
