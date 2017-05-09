@@ -1,0 +1,7 @@
+/doc/
+/lib/
+/bin/
+/.shards/
+murder-horse
+murder-horse.o
+bc_flags
